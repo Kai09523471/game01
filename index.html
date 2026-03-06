@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>とある館にて</title>
     <style>
-        /* 全体の設定 */
+        
         body {
             background-color: black;
             color: white;
@@ -14,12 +14,12 @@
             margin-top: 15%;
         }
 
-        /* 画面を隠すためのクラス */
+        
         .hidden {
             display: none;
         }
 
-        /* タイトル画面のメニューのスタイル */
+        
         .menu-item {
             font-size: 24px;
             margin: 15px;
@@ -28,14 +28,14 @@
             color: yellow;
         }
 
-        /* 名前入力欄のスタイル */
+        
         input[type="text"] {
             font-size: 20px;
             padding: 5px;
             text-align: center;
         }
 
-        /* セリフを表示する枠のスタイル */
+        
         #dialogue-box {
             font-size: 22px;
             border: 1px solid white;
@@ -80,15 +80,15 @@
         ];
         let dialogueIndex = 0; 
 
-        // --- キーボードの入力を監視する処理 ---
+        
         document.addEventListener('keydown', (e) => {
             
-            // 【重要・修正ポイント】日本語入力中（変換中）のEnterキーは無視する
+            
             if (e.isComposing || e.keyCode === 229) {
                 return;
             }
             
-            // 【タイトル画面の操作】
+            
             if (currentScene === 'title') {
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     titleMenuIndex = (titleMenuIndex === 0) ? 1 : 0;
@@ -101,7 +101,7 @@
                     }
                 }
             } 
-            // 【名前入力画面の操作】
+        
             else if (currentScene === 'name') {
                 if (e.key === 'Enter') {
                     const input = document.getElementById('player-name').value;
@@ -112,7 +112,7 @@
                     }
                 }
             } 
-            // 【セリフ画面の操作】
+            
             else if (currentScene === 'dialogue') {
                 if (e.key === 'Enter') {
                     dialogueIndex++; 
