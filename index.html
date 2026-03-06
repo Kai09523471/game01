@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Game</title>
+    <title>とある館にて</title>
     <style>
-        /* 全体の設定：画面を真っ黒にして文字を白に */
+        /* 全体の設定 */
         body {
             background-color: black;
             color: white;
             font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
             text-align: center;
-            margin-top: 15%; /* 画面の中央寄りに配置 */
+            margin-top: 15%;
         }
 
         /* 画面を隠すためのクラス */
@@ -25,7 +25,7 @@
             margin: 15px;
         }
         .selected {
-            color: yellow; /* 選択中の文字色 */
+            color: yellow;
         }
 
         /* 名前入力欄のスタイル */
@@ -67,12 +67,10 @@
     </div>
 
     <script>
-        // --- ゲームの状態を管理する変数 ---
-        let currentScene = 'title'; // 現在の画面 ('title', 'name', 'dialogue')
-        let titleMenuIndex = 0;     // 0: ニューゲーム, 1: コンティニュー
-        let playerName = "";        // プレイヤーの名前
+        let currentScene = 'title'; 
+        let titleMenuIndex = 0;     
+        let playerName = "";        
 
-        // セリフのリスト（[NAME]の部分にプレイヤー名が入ります）
         const dialogues = [
             "「……目が覚めたか。」",
             "「ここはどこだか分かるか？ ……いや、無理もないか。」",
@@ -80,21 +78,24 @@
             "「さあ、[NAME]。立ち上がるんだ。」",
             "「お前の物語が、今始まる――。」"
         ];
-        let dialogueIndex = 0; // 今何番目のセリフを表示しているか
+        let dialogueIndex = 0; 
 
         // --- キーボードの入力を監視する処理 ---
         document.addEventListener('keydown', (e) => {
             
+            // 【重要・修正ポイント】日本語入力中（変換中）のEnterキーは無視する
+            if (e.isComposing || e.keyCode === 229) {
+                return;
+            }
+            
             // 【タイトル画面の操作】
             if (currentScene === 'title') {
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    // 上下キーでメニューを選択
                     titleMenuIndex = (titleMenuIndex === 0) ? 1 : 0;
                     updateTitleMenu();
                 } else if (e.key === 'Enter') {
-                    // Enterキーで決定
                     if (titleMenuIndex === 0) {
-                        changeScene('name'); // ニューゲームなら名前入力へ
+                        changeScene('name'); 
                     } else {
                         alert('コンティニューデータがありません！');
                     }
@@ -105,8 +106,8 @@
                 if (e.key === 'Enter') {
                     const input = document.getElementById('player-name').value;
                     if (input.trim() !== '') {
-                        playerName = input; // 名前を保存
-                        changeScene('dialogue'); // セリフ画面へ
+                        playerName = input; 
+                        changeScene('dialogue'); 
                         showDialogue();
                     }
                 }
@@ -114,60 +115,12 @@
             // 【セリフ画面の操作】
             else if (currentScene === 'dialogue') {
                 if (e.key === 'Enter') {
-                    dialogueIndex++; // 次のセリフへ
+                    dialogueIndex++; 
                     showDialogue();
                 }
             }
         });
 
-        // --- 画面表示を切り替える関数たち ---
-
-        // メニューの矢印（▶）を動かす
         function updateTitleMenu() {
             const newGame = document.getElementById('menu-newgame');
-            const continueGame = document.getElementById('menu-continue');
-            
-            if (titleMenuIndex === 0) {
-                newGame.innerHTML = '▶ ニューゲーム';
-                newGame.classList.add('selected');
-                continueGame.innerHTML = '　 コンティニュー';
-                continueGame.classList.remove('selected');
-            } else {
-                newGame.innerHTML = '　 ニューゲーム';
-                newGame.classList.remove('selected');
-                continueGame.innerHTML = '▶ コンティニュー';
-                continueGame.classList.add('selected');
-            }
-        }
-
-        // シーン（画面）を切り替える
-        function changeScene(scene) {
-            // 一旦すべての画面を隠す
-            document.getElementById('title-scene').classList.add('hidden');
-            document.getElementById('name-scene').classList.add('hidden');
-            document.getElementById('dialogue-scene').classList.add('hidden');
-            
-            // 指定された画面だけを表示する
-            currentScene = scene;
-            document.getElementById(`${scene}-scene`).classList.remove('hidden');
-            
-            // 名前入力画面になったら、自動的に入力欄を選択状態にする
-            if (scene === 'name') {
-                document.getElementById('player-name').focus();
-            }
-        }
-
-        // セリフを表示する
-        function showDialogue() {
-            if (dialogueIndex < dialogues.length) {
-                // セリフの中の [NAME] を、入力された名前に置き換えて表示
-                let text = dialogues[dialogueIndex].replace(/\[NAME\]/g, playerName);
-                document.getElementById('dialogue-box').innerText = text;
-            } else {
-                // セリフが最後まで終わった時の処理
-                document.getElementById('dialogue-box').innerText = "（プロローグ終了。フィールド画面などへ移行…）";
-            }
-        }
-    </script>
-</body>
-</html>
+            const continueGame = document.
