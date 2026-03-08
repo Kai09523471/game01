@@ -93,6 +93,11 @@ function drawTitle(){
 
 screen.innerHTML=""
 
+ const title=document.createElement("div")
+title.className="title"
+title.textContent="脱出ゲーム"
+screen.appendChild(title)
+ 
 menu.forEach((m,i)=>{
 
 const div=document.createElement("div")
