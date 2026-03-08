@@ -1,155 +1,226 @@
+```html
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Game</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: sans-serif;
-            text-align: center;
-            margin-top: 15%;
-            user-select: none; /* 文字を誤って選択しないようにする */
-        }
-        .hidden { display: none; }
-        .menu-item { 
-            font-size: 24px; 
-            margin: 15px; 
-            cursor: pointer; /* マウスを乗せると指マークになる */
-        }
-        .selected { color: yellow; }
-        input[type="text"] { font-size: 20px; padding: 5px; text-align: center; }
-        button { font-size: 18px; padding: 5px 15px; margin-top: 10px; cursor: pointer; }
-        
-        #dialogue-scene {
-            cursor: pointer; /* 画面全体をクリックできるようにする */
-        }
-        #dialogue-box {
-            font-size: 22px; border: 1px solid white; padding: 20px;
-            width: 80%; max-width: 600px; margin: 0 auto; text-align: left; min-height: 80px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Game</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:white;
+font-family:monospace;
+overflow:hidden;
+}
+
+#screen{
+width:100vw;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+.menu{
+font-size:28px;
+margin:5px;
+}
+
+.selected{
+color:yellow;
+}
+
+#dialogBox{
+position:absolute;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+width:80%;
+height:120px;
+border:3px solid white;
+padding:15px;
+font-size:22px;
+display:none;
+}
+
+#next{
+position:absolute;
+right:15px;
+bottom:10px;
+font-size:20px;
+}
+
+input{
+font-size:20px;
+background:black;
+color:white;
+border:1px solid white;
+margin-top:10px;
+}
+
+</style>
 </head>
+
 <body>
 
-    <div id="title-scene">
-        <h1 style="margin-bottom: 50px; letter-spacing: 5px;">UNTITLED GAME</h1>
-        <div id="menu-newgame" class="menu-item selected" onclick="selectMenu('newgame')">▶ ニューゲーム</div>
-        <div id="menu-continue" class="menu-item" onclick="selectMenu('continue')">　 コンティニュー</div>
-    </div>
+<div id="screen"></div>
 
-    <div id="name-scene" class="hidden">
-        <h2>あなたの名前を教えてください</h2>
-        <input type="text" id="player-name" placeholder="なまえ" autocomplete="off">
-        <br>
-        <button onclick="submitName()">けってい</button>
-    </div>
+<div id="dialogBox">
+<div id="text"></div>
+<div id="next">▼</div>
+</div>
 
-    <div id="dialogue-scene" class="hidden" onclick="advanceDialogue()">
-        <div id="dialogue-box"></div>
-        <p style="font-size: 14px; color: gray;">▼ クリック（タップ）またはEnterで進む</p>
-    </div>
+<script>
 
-    <script>
-        let currentScene = 'title';
-        let titleMenuIndex = 0;
-        let playerName = "";
+let state="title"
+let menuIndex=0
+let playerName=""
 
-        const dialogues = [
-            "「……目が覚めたか。」",
-            "「ここはどこだか分かるか？ ……いや、無理もないか。」",
-            "「お前の名前は……そう、『[NAME]』だったな。」",
-            "「さあ、[NAME]。立ち上がるんだ。」"
-        ];
-        let dialogueIndex = 0;
+const menu=["ニューゲーム","コンテニュー"]
 
-        // --- マウス・タップ用の処理 ---
+const screen=document.getElementById("screen")
+const dialogBox=document.getElementById("dialogBox")
+const text=document.getElementById("text")
 
-        function selectMenu(choice) {
-            if (choice === 'newgame') {
-                titleMenuIndex = 0;
-                updateTitleMenu();
-                changeScene('name');
-            } else {
-                titleMenuIndex = 1;
-                updateTitleMenu();
-                alert('コンティニューデータがありません！');
-            }
-        }
+let story=[]
+let storyIndex=0
 
-        function submitName() {
-            const input = document.getElementById('player-name').value;
-            if (input.trim() !== '') {
-                playerName = input;
-                changeScene('dialogue');
-                showDialogue();
-            }
-        }
 
-        function advanceDialogue() {
-            dialogueIndex++;
-            showDialogue();
-        }
+function drawTitle(){
 
-        // --- キーボード用の処理（そのまま残してあります） ---
-        window.addEventListener('keydown', (e) => {
-            if (e.isComposing || e.keyCode === 229) return;
+screen.innerHTML=""
 
-            if (currentScene === 'title') {
-                if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'w' || e.key === 's') {
-                    titleMenuIndex = (titleMenuIndex === 0) ? 1 : 0;
-                    updateTitleMenu();
-                } else if (e.key === 'Enter') {
-                    selectMenu(titleMenuIndex === 0 ? 'newgame' : 'continue');
-                }
-            } else if (currentScene === 'name') {
-                if (e.key === 'Enter') submitName();
-            } else if (currentScene === 'dialogue') {
-                if (e.key === 'Enter') advanceDialogue();
-            }
-        });
+menu.forEach((m,i)=>{
 
-        // --- 画面更新用の処理 ---
-        function updateTitleMenu() {
-            const newGame = document.getElementById('menu-newgame');
-            const continueGame = document.getElementById('menu-continue');
+const div=document.createElement("div")
+div.className="menu"
 
-            if (titleMenuIndex === 0) {
-                newGame.innerHTML = '▶ ニューゲーム';
-                newGame.classList.add('selected');
-                continueGame.innerHTML = '　 コンティニュー';
-                continueGame.classList.remove('selected');
-            } else {
-                newGame.innerHTML = '　 ニューゲーム';
-                newGame.classList.remove('selected');
-                continueGame.innerHTML = '▶ コンティニュー';
-                continueGame.classList.add('selected');
-            }
-        }
+if(i===menuIndex){
+div.classList.add("selected")
+div.textContent="▶ "+m
+}else{
+div.textContent=m
+}
 
-        function changeScene(scene) {
-            document.getElementById('title-scene').classList.add('hidden');
-            document.getElementById('name-scene').classList.add('hidden');
-            document.getElementById('dialogue-scene').classList.add('hidden');
+screen.appendChild(div)
 
-            currentScene = scene;
-            document.getElementById(`${scene}-scene`).classList.remove('hidden');
+})
 
-            if (scene === 'name') {
-                document.getElementById('player-name').focus();
-            }
-        }
+}
 
-        function showDialogue() {
-            if (dialogueIndex < dialogues.length) {
-                let text = dialogues[dialogueIndex].replace(/\[NAME\]/g, playerName);
-                document.getElementById('dialogue-box').innerText = text;
-            } else {
-                document.getElementById('dialogue-box').innerText = "（プロローグ終了。次へ…）";
-            }
-        }
-    </script>
+
+function nameInput(){
+
+screen.innerHTML=""
+
+const t=document.createElement("div")
+t.textContent="名前を入力してください"
+t.style.fontSize="24px"
+
+const input=document.createElement("input")
+
+input.addEventListener("keydown",(e)=>{
+
+if(e.key==="Enter"){
+playerName=input.value
+startStory()
+}
+
+})
+
+screen.appendChild(t)
+screen.appendChild(input)
+
+input.focus()
+
+}
+
+
+function startStory(){
+
+state="story"
+
+screen.innerHTML=""
+
+story=[
+"...",
+playerName+"、聞こえますか？",
+"これはあなたへのメッセージです",
+"これから物語が始まります"
+]
+
+storyIndex=0
+
+dialogBox.style.display="block"
+
+showText()
+
+}
+
+
+function showText(){
+
+text.textContent=story[storyIndex]
+
+}
+
+
+document.addEventListener("keydown",(e)=>{
+
+if(state==="title"){
+
+if(e.key==="ArrowUp"){
+menuIndex--
+if(menuIndex<0) menuIndex=menu.length-1
+drawTitle()
+}
+
+if(e.key==="ArrowDown"){
+menuIndex++
+if(menuIndex>=menu.length) menuIndex=0
+drawTitle()
+}
+
+if(e.key==="Enter"){
+
+if(menuIndex===0){
+state="name"
+nameInput()
+}
+
+if(menuIndex===1){
+alert("セーブデータがありません")
+}
+
+}
+
+}
+
+else if(state==="story"){
+
+if(e.key==="Enter"){
+
+storyIndex++
+
+if(storyIndex<story.length){
+showText()
+}else{
+text.textContent="(ここからゲームが始まる)"
+}
+
+}
+
+}
+
+})
+
+drawTitle()
+
+</script>
+
 </body>
 </html>
+```
