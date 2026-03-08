@@ -2,48 +2,22 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>とある館にて</title>
+    <title>My Game</title>
     <style>
-        
         body {
             background-color: black;
             color: white;
-            font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+            font-family: sans-serif;
             text-align: center;
             margin-top: 15%;
         }
-
-        
-        .hidden {
-            display: none;
-        }
-
-        
-        .menu-item {
-            font-size: 24px;
-            margin: 15px;
-        }
-        .selected {
-            color: yellow;
-        }
-
-        
-        input[type="text"] {
-            font-size: 20px;
-            padding: 5px;
-            text-align: center;
-        }
-
-        
+        .hidden { display: none; }
+        .menu-item { font-size: 24px; margin: 15px; }
+        .selected { color: yellow; }
+        input[type="text"] { font-size: 20px; padding: 5px; text-align: center; }
         #dialogue-box {
-            font-size: 22px;
-            border: 1px solid white;
-            padding: 20px;
-            width: 60%;
-            margin: 0 auto;
-            text-align: left;
-            min-height: 80px;
+            font-size: 22px; border: 1px solid white; padding: 20px;
+            width: 60%; margin: 0 auto; text-align: left; min-height: 80px;
         }
     </style>
 </head>
@@ -67,55 +41,50 @@
     </div>
 
     <script>
-        let currentScene = 'title'; 
-        let titleMenuIndex = 0;     
-        let playerName = "";        
+        let currentScene = 'title';
+        let titleMenuIndex = 0; // 0=ニューゲーム, 1=コンティニュー
+        let playerName = "";
 
         const dialogues = [
             "「……目が覚めたか。」",
             "「ここはどこだか分かるか？ ……いや、無理もないか。」",
             "「お前の名前は……そう、『[NAME]』だったな。」",
-            "「さあ、[NAME]。立ち上がるんだ。」",
-            "「お前の物語が、今始まる――。」"
+            "「さあ、[NAME]。立ち上がるんだ。」"
         ];
-        let dialogueIndex = 0; 
+        let dialogueIndex = 0;
 
-        
-        document.addEventListener('keydown', (e) => {
+        // 【改良】document ではなく window 全体でキー入力を監視します
+        window.addEventListener('keydown', (e) => {
             
-            
-            if (e.isComposing || e.keyCode === 229) {
-                return;
-            }
-            
-            
+            if (e.isComposing || e.keyCode === 229) return;
+
             if (currentScene === 'title') {
-                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                // 【改良】上下の矢印キー、または W / S キーで動きます
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'w' || e.key === 's') {
                     titleMenuIndex = (titleMenuIndex === 0) ? 1 : 0;
                     updateTitleMenu();
-                } else if (e.key === 'Enter') {
+                }
+                else if (e.key === 'Enter') {
                     if (titleMenuIndex === 0) {
-                        changeScene('name'); 
+                        changeScene('name');
                     } else {
                         alert('コンティニューデータがありません！');
                     }
                 }
-            } 
-        
+            }
             else if (currentScene === 'name') {
                 if (e.key === 'Enter') {
                     const input = document.getElementById('player-name').value;
                     if (input.trim() !== '') {
-                        playerName = input; 
-                        changeScene('dialogue'); 
+                        playerName = input;
+                        changeScene('dialogue');
                         showDialogue();
                     }
                 }
-            } 
-            
+            }
             else if (currentScene === 'dialogue') {
                 if (e.key === 'Enter') {
-                    dialogueIndex++; 
+                    dialogueIndex++;
                     showDialogue();
                 }
             }
@@ -123,4 +92,43 @@
 
         function updateTitleMenu() {
             const newGame = document.getElementById('menu-newgame');
-            const continueGame = document.
+            const continueGame = document.getElementById('menu-continue');
+
+            // 選択中のメニューに ▶ をつけて黄色にする処理
+            if (titleMenuIndex === 0) {
+                newGame.innerHTML = '▶ ニューゲーム';
+                newGame.classList.add('selected');
+                continueGame.innerHTML = '　 コンティニュー';
+                continueGame.classList.remove('selected');
+            } else {
+                newGame.innerHTML = '　 ニューゲーム';
+                newGame.classList.remove('selected');
+                continueGame.innerHTML = '▶ コンティニュー';
+                continueGame.classList.add('selected');
+            }
+        }
+
+        function changeScene(scene) {
+            document.getElementById('title-scene').classList.add('hidden');
+            document.getElementById('name-scene').classList.add('hidden');
+            document.getElementById('dialogue-scene').classList.add('hidden');
+
+            currentScene = scene;
+            document.getElementById(`${scene}-scene`).classList.remove('hidden');
+
+            if (scene === 'name') {
+                document.getElementById('player-name').focus();
+            }
+        }
+
+        function showDialogue() {
+            if (dialogueIndex < dialogues.length) {
+                let text = dialogues[dialogueIndex].replace(/\[NAME\]/g, playerName);
+                document.getElementById('dialogue-box').innerText = text;
+            } else {
+                document.getElementById('dialogue-box').innerText = "（プロローグ終了。次へ…）";
+            }
+        }
+    </script>
+</body>
+</html>
