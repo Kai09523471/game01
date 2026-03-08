@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Game</title>
     <style>
         body {
@@ -10,39 +11,50 @@
             font-family: sans-serif;
             text-align: center;
             margin-top: 15%;
+            user-select: none; /* 文字を誤って選択しないようにする */
         }
         .hidden { display: none; }
-        .menu-item { font-size: 24px; margin: 15px; }
+        .menu-item { 
+            font-size: 24px; 
+            margin: 15px; 
+            cursor: pointer; /* マウスを乗せると指マークになる */
+        }
         .selected { color: yellow; }
         input[type="text"] { font-size: 20px; padding: 5px; text-align: center; }
+        button { font-size: 18px; padding: 5px 15px; margin-top: 10px; cursor: pointer; }
+        
+        #dialogue-scene {
+            cursor: pointer; /* 画面全体をクリックできるようにする */
+        }
         #dialogue-box {
             font-size: 22px; border: 1px solid white; padding: 20px;
-            width: 60%; margin: 0 auto; text-align: left; min-height: 80px;
+            width: 80%; max-width: 600px; margin: 0 auto; text-align: left; min-height: 80px;
         }
     </style>
 </head>
 <body>
 
     <div id="title-scene">
-        <h1 style="margin-bottom: 50px; letter-spacing: 5px;">脱出ゲーム</h1>
-        <div id="menu-newgame" class="menu-item selected">▶ ニューゲーム</div>
-        <div id="menu-continue" class="menu-item">　 コンティニュー</div>
+        <h1 style="margin-bottom: 50px; letter-spacing: 5px;">UNTITLED GAME</h1>
+        <div id="menu-newgame" class="menu-item selected" onclick="selectMenu('newgame')">▶ ニューゲーム</div>
+        <div id="menu-continue" class="menu-item" onclick="selectMenu('continue')">　 コンティニュー</div>
     </div>
 
     <div id="name-scene" class="hidden">
         <h2>あなたの名前を教えてください</h2>
         <input type="text" id="player-name" placeholder="なまえ" autocomplete="off">
-        <p style="font-size: 14px; color: gray;">入力後、Enterキーを押してください</p>
+        <br>
+        <button onclick="submitName()">けってい</button>
     </div>
 
-    <div id="dialogue-scene" class="hidden">
+    <div id="dialogue-scene" class="hidden" onclick="advanceDialogue()">
         <div id="dialogue-box"></div>
-        <p style="font-size: 14px; color: gray;">▼ Enterキーで進む</p>
+        <p style="font-size: 14px; color: gray;">▼ クリック（タップ）またはEnterで進む</p>
     </div>
 
     <script>
         let currentScene = 'title';
-        let titleMenuIndex = 0; // 0=ニューゲーム, 1=コンティニュー
+        let titleMenuIndex = 0;
         let playerName = "";
 
         const dialogues = [
@@ -53,48 +65,57 @@
         ];
         let dialogueIndex = 0;
 
-        // 【改良】document ではなく window 全体でキー入力を監視します
+        // --- マウス・タップ用の処理 ---
+
+        function selectMenu(choice) {
+            if (choice === 'newgame') {
+                titleMenuIndex = 0;
+                updateTitleMenu();
+                changeScene('name');
+            } else {
+                titleMenuIndex = 1;
+                updateTitleMenu();
+                alert('コンティニューデータがありません！');
+            }
+        }
+
+        function submitName() {
+            const input = document.getElementById('player-name').value;
+            if (input.trim() !== '') {
+                playerName = input;
+                changeScene('dialogue');
+                showDialogue();
+            }
+        }
+
+        function advanceDialogue() {
+            dialogueIndex++;
+            showDialogue();
+        }
+
+        // --- キーボード用の処理（そのまま残してあります） ---
         window.addEventListener('keydown', (e) => {
-            
             if (e.isComposing || e.keyCode === 229) return;
 
             if (currentScene === 'title') {
-                // 【改良】上下の矢印キー、または W / S キーで動きます
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'w' || e.key === 's') {
                     titleMenuIndex = (titleMenuIndex === 0) ? 1 : 0;
                     updateTitleMenu();
+                } else if (e.key === 'Enter') {
+                    selectMenu(titleMenuIndex === 0 ? 'newgame' : 'continue');
                 }
-                else if (e.key === 'Enter') {
-                    if (titleMenuIndex === 0) {
-                        changeScene('name');
-                    } else {
-                        alert('コンティニューデータがありません！');
-                    }
-                }
-            }
-            else if (currentScene === 'name') {
-                if (e.key === 'Enter') {
-                    const input = document.getElementById('player-name').value;
-                    if (input.trim() !== '') {
-                        playerName = input;
-                        changeScene('dialogue');
-                        showDialogue();
-                    }
-                }
-            }
-            else if (currentScene === 'dialogue') {
-                if (e.key === 'Enter') {
-                    dialogueIndex++;
-                    showDialogue();
-                }
+            } else if (currentScene === 'name') {
+                if (e.key === 'Enter') submitName();
+            } else if (currentScene === 'dialogue') {
+                if (e.key === 'Enter') advanceDialogue();
             }
         });
 
+        // --- 画面更新用の処理 ---
         function updateTitleMenu() {
             const newGame = document.getElementById('menu-newgame');
             const continueGame = document.getElementById('menu-continue');
 
-            // 選択中のメニューに ▶ をつけて黄色にする処理
             if (titleMenuIndex === 0) {
                 newGame.innerHTML = '▶ ニューゲーム';
                 newGame.classList.add('selected');
