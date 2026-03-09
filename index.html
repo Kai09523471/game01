@@ -226,10 +226,86 @@ text.textContent="現在,開発中!"
 
 })
 
+
+function startShootingGame(){
+
+state = "shooting"
+
+screen.innerHTML = "<canvas id='game' width='600' height='400'></canvas>"
+
+const canvas = document.getElementById("game")
+const ctx = canvas.getContext("2d")
+
+let playerX = 280
+let bullets = []
+let enemies = []
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="ArrowLeft"){
+playerX -= 20
+}
+
+if(e.key==="ArrowRight"){
+playerX += 20
+}
+
+if(e.key===" "){
+bullets.push({x:playerX+10,y:350})
+}
+
+})
+
+function spawnEnemy(){
+
+enemies.push({
+x:Math.random()*560,
+y:0
+})
+
+}
+
+setInterval(spawnEnemy,1000)
+
+function update(){
+
+ctx.fillStyle="black"
+ctx.fillRect(0,0,600,400)
+
+
+
+ctx.fillStyle="white"
+ctx.fillRect(playerX,360,20,20)
+
+
+
+bullets.forEach(b=>{
+b.y -= 5
+ctx.fillRect(b.x,b.y,5,10)
+})
+
+
+
+ctx.fillStyle="red"
+
+enemies.forEach(e=>{
+e.y += 2
+ctx.fillRect(e.x,e.y,20,20)
+})
+
+requestAnimationFrame(update)
+
+}
+
+update()
+
+}
+
+
 drawTitle()
 
 </script>
 
 </body>
 </html>
-```
+、、、 
