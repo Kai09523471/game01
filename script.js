@@ -51,21 +51,7 @@ showText()
 }
 
 
-input.addEventListener("keydown",(e)=>{
 
-if(e.key==="Enter"){
-
-playerName = input.value
-
-if(playerName === "シューティング"){
-startShootingGame()
-}else{
-startStory()
-}
-
-}
-
-})
 
 
 function startShootingGame(){
