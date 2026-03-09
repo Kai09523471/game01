@@ -46,3 +46,32 @@ opacity:1;
 }
 
 }
+
+
+#dialogBox{
+position:absolute;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+width:80%;
+height:120px;
+border:3px solid white;
+padding:15px;
+font-size:22px;
+}
+
+#next{
+position:absolute;
+right:15px;
+bottom:10px;
+font-size:20px;
+animation:arrowBlink 1s infinite;
+}
+
+@keyframes arrowBlink{
+
+0%{opacity:1;}
+50%{opacity:0;}
+100%{opacity:1;}
+
+}
