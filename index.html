@@ -93,11 +93,6 @@ function drawTitle(){
 
 screen.innerHTML=""
 
- const title=document.createElement("div")
-title.className="title"
-title.textContent="脱出ゲーム"
-screen.appendChild(title)
- 
 menu.forEach((m,i)=>{
 
 const div=document.createElement("div")
@@ -125,18 +120,13 @@ const t=document.createElement("div")
 t.textContent="名前を入力してください"
 t.style.fontSize="24px"
 
-const input.addEventListener("keydown",(e)=>{
+const input=document.createElement("input")
+
+input.addEventListener("keydown",(e)=>{
 
 if(e.key==="Enter"){
-
-playerName = input.value
-
-if(playerName === "シューティング"){
-startShootingGame()
-}else{
+playerName=input.value
 startStory()
-}
-
 }
 
 })
@@ -157,8 +147,8 @@ screen.innerHTML=""
 
 story=[
 "...",
-"町外れにある館",
-"そこには化け物が出るという噂があった…",
+playerName+"町外れにある館",
+"そこには化け物が出るといううわさがあった..."
 ]
 
 storyIndex=0
@@ -217,7 +207,7 @@ storyIndex++
 if(storyIndex<story.length){
 showText()
 }else{
-text.textContent="現在,開発中!"
+text.textContent="現在、開発中!"
 }
 
 }
@@ -226,11 +216,10 @@ text.textContent="現在,開発中!"
 
 })
 
-
- drawTitle()
+drawTitle()
 
 </script>
 
 </body>
 </html>
-、、、
+```
