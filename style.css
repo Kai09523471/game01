@@ -75,3 +75,35 @@ animation:arrowBlink 1s infinite;
 100%{opacity:1;}
 
 }
+
+
+#lobby{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background-image:url("lobby.png");
+background-size:cover;
+background-position:center;
+
+display:none;
+}
+
+
+
+.character{
+position:absolute;
+bottom:150px;
+font-size:40px;
+}
+
+
+
+#char1{ left:20%; }
+#char2{ left:40%; }
+#char3{ left:60%; }
+#char4{ left:80%; }
+
+
