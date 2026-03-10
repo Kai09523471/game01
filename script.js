@@ -51,6 +51,23 @@ showText()
 }
 
 
+function startLobby(){
 
+state = "lobby"
+
+document.getElementById("lobby").style.display = "block"
+
+story = [
+"卓志: ここが噂の絶叫スポットか...",
+"ミキ: なんだか寒いわ",
+"たかし: お...おいもう帰ろう"
+playerName + ": 化物なんているわけないでしょう実際",
+
+]
+
+storyIndex = 0
+showText()
+
+}
 
 
