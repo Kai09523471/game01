@@ -25,7 +25,7 @@ screen.innerHTML=""
 
 const title = document.createElement("div")
 title.className="title"
-title.textContent="MY GAME"
+title.textContent="脱出ゲーム"
 screen.appendChild(title)
 
 menu.forEach((m,i)=>{
