@@ -75,8 +75,7 @@ state="story"
 screen.innerHTML=""
 
 story=[
-"...",
-playerName+"町外れにある館",
+"町外れにある館",
 "そこには化物がでるという噂があった"
 ]
 
