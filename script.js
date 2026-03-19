@@ -197,4 +197,3 @@ text.textContent="（ここからゲーム本編）"
 })
 
 drawTitle()
-```
