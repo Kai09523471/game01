@@ -183,7 +183,7 @@ showText()
 if(state==="story"){
 startLobby()
 }else{
-text.textContent="（ここからゲーム本編）"
+text.textContent="（commong soon...）"
 }
 
 }
