@@ -4,227 +4,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Game</title>
-
-<style>
-
-body{
-margin:0;
-background:black;
-color:white;
-font-family:monospace;
-overflow:hidden;
-}
-
-#screen{
-width:100vw;
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-}
-
-.menu{
-font-size:28px;
-margin:5px;
-}
-
-.selected{
-color:yellow;
-}
-
-#dialogBox{
-position:absolute;
-bottom:30px;
-left:50%;
-transform:translateX(-50%);
-width:80%;
-height:120px;
-border:3px solid white;
-padding:15px;
-font-size:22px;
-display:none;
-}
-
-#next{
-position:absolute;
-right:15px;
-bottom:10px;
-font-size:20px;
-}
-
-input{
-font-size:20px;
-background:black;
-color:white;
-border:1px solid white;
-margin-top:10px;
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <div id="screen"></div>
 
-<div id="dialogBox">
-<div id="text"></div>
-<div id="next">▼</div>
-</div>
-
-<script>
-
-let state="title"
-let menuIndex=0
-let playerName=""
-
-const menu=["ニューゲーム","コンテニュー"]
-
-const screen=document.getElementById("screen")
-const dialogBox=document.getElementById("dialogBox")
-const text=document.getElementById("text")
-
-let story=[]
-let storyIndex=0
-
-
-function drawTitle(){
-
-screen.innerHTML=""
-
-menu.forEach((m,i)=>{
-
-const div=document.createElement("div")
-div.className="menu"
-
-if(i===menuIndex){
-div.classList.add("selected")
-div.textContent="▶ "+m
-}else{
-div.textContent=m
-}
-
-screen.appendChild(div)
-
-})
-
-}
-
-
-function nameInput(){
-
-screen.innerHTML=""
-
-const t=document.createElement("div")
-t.textContent="名前を入力してください"
-t.style.fontSize="24px"
-
-const input=document.createElement("input")
-
-input.addEventListener("keydown",(e)=>{
-
-if(e.key==="Enter"){
-playerName=input.value
-startStory()
-}
-
-})
-
-screen.appendChild(t)
-screen.appendChild(input)
-
-input.focus()
-
-}
-
-
-function startStory(){
-
-state="story"
-
-screen.innerHTML=""
-
-story=[
-"...",
-"町外れにある館",
-"そこには化け物が出るといううわさがあった..."
-]
-
-storyIndex=0
-
-dialogBox.style.display="block"
-
-showText()
-
-}
-
-
-function showText(){
-
-text.textContent=story[storyIndex]
-
-}
-
-
-document.addEventListener("keydown",(e)=>{
-
-if(state==="title"){
-
-if(e.key==="ArrowUp"){
-menuIndex--
-if(menuIndex<0) menuIndex=menu.length-1
-drawTitle()
-}
-
-if(e.key==="ArrowDown"){
-menuIndex++
-if(menuIndex>=menu.length) menuIndex=0
-drawTitle()
-}
-
-if(e.key==="Enter"){
-
-if(menuIndex===0){
-state="name"
-nameInput()
-}
-
-if(menuIndex===1){
-alert("セーブデータがありません")
-}
-
-}
-
-}
-
-else if(state==="story"){
-
-if(e.key==="Enter"){
-
-storyIndex++
-
-if(storyIndex<story.length){
-showText()
-}else{
-startLobby()
-}
-
-}
-
-}
-
-})
-
-drawTitle()
-
-</script>
-
-</body>
-</html>
-```
-
-
+<!-- ロビー背景＋キャラ -->
 <div id="lobby">
 
 <div id="char1" class="character">🧑</div>
@@ -233,3 +20,15 @@ drawTitle()
 <div id="char4" class="character">👧</div>
 
 </div>
+
+<!-- セリフウィンドウ -->
+<div id="dialogBox">
+<div id="text"></div>
+<div id="next">▼</div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
+```
