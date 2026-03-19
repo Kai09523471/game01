@@ -1,13 +1,118 @@
+```javascript
+let state = "title"
+let menuIndex = 0
+let playerName = ""
+
+const screen = document.getElementById("screen")
+const dialogBox = document.getElementById("dialogBox")
+const text = document.getElementById("text")
+
+const menu = ["ニューゲーム","コンテニュー"]
+
+let story = []
+let storyIndex = 0
+
+/* 文字表示用 */
 let textSpeed = 40
 let currentText = ""
 let textIndex = 0
 let typing = false
 
+/* タイトル画面 */
+function drawTitle(){
+
+screen.innerHTML=""
+
+const title = document.createElement("div")
+title.className="title"
+title.textContent="MY GAME"
+screen.appendChild(title)
+
+menu.forEach((m,i)=>{
+const div=document.createElement("div")
+div.className="menu"
+
+if(i===menuIndex){
+div.classList.add("selected")
+div.textContent="▶ "+m
+}else{
+div.textContent=m
+}
+
+screen.appendChild(div)
+})
+
+}
+
+/* 名前入力 */
+function nameInput(){
+
+screen.innerHTML=""
+
+const t=document.createElement("div")
+t.textContent="名前を入力してください"
+t.style.fontSize="24px"
+
+const input=document.createElement("input")
+
+input.addEventListener("keydown",(e)=>{
+if(e.key==="Enter"){
+playerName=input.value
+startStory()
+}
+})
+
+screen.appendChild(t)
+screen.appendChild(input)
+input.focus()
+
+}
+
+/* 最初のストーリー */
+function startStory(){
+
+state="story"
+screen.innerHTML=""
+
+story=[
+"...",
+playerName+"、聞こえますか？",
+"これはあなたへのメッセージです",
+"これから物語が始まります"
+]
+
+storyIndex=0
+dialogBox.style.display="block"
+
+showText()
+
+}
+
+/* ロビー */
+function startLobby(){
+
+state="lobby"
+
+document.getElementById("lobby").style.display="block"
+
+story=[
+"アキ: ここが館のロビーか…",
+"ユキ: すごい豪華…",
+`${playerName}: なんだか不気味だな`,
+"ミナ: 誰かいないのかな"
+]
+
+storyIndex=0
+showText()
+
+}
+
+/* 文字表示 */
 function showText(){
 
 currentText = story[storyIndex]
-textIndex = 0
 text.textContent = ""
+textIndex = 0
 typing = true
 
 typeText()
@@ -21,24 +126,53 @@ if(textIndex < currentText.length){
 text.textContent += currentText[textIndex]
 textIndex++
 
-setTimeout(typeText, textSpeed)
+setTimeout(typeText,textSpeed)
 
 }else{
-
 typing = false
-
 }
 
 }
 
+/* キー操作 */
+document.addEventListener("keydown",(e)=>{
 
-if(state==="story"){
+if(state==="title"){
+
+if(e.key==="ArrowUp"){
+menuIndex--
+if(menuIndex<0) menuIndex=menu.length-1
+drawTitle()
+}
+
+if(e.key==="ArrowDown"){
+menuIndex++
+if(menuIndex>=menu.length) menuIndex=0
+drawTitle()
+}
+
+if(e.key==="Enter"){
+
+if(menuIndex===0){
+state="name"
+nameInput()
+}
+
+if(menuIndex===1){
+alert("セーブデータがありません")
+}
+
+}
+
+}
+
+else if(state==="story" || state==="lobby"){
 
 if(e.key==="Enter"){
 
 if(typing){
-text.textContent = currentText
-typing = false
+text.textContent=currentText
+typing=false
 return
 }
 
@@ -46,28 +180,21 @@ storyIndex++
 
 if(storyIndex < story.length){
 showText()
+}else{
+
+if(state==="story"){
+startLobby()
+}else{
+text.textContent="（ここからゲーム本編）"
 }
 
 }
 
-
-function startLobby(){
-
-state = "lobby"
-
-document.getElementById("lobby").style.display = "block"
-
-story = [
-"卓志: ここが噂の絶叫スポットか...",
-"ミキ: なんだか寒いわ",
-"たかし: お...おいもう帰ろう"
-playerName + ": 化物なんているわけないでしょう実際",
-
-]
-
-storyIndex = 0
-showText()
+}
 
 }
 
+})
 
+drawTitle()
+```
