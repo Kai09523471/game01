@@ -183,7 +183,7 @@ showText()
 if(state==="story"){
 startLobby()
 }else{
-text.textContent="（commong soon...）"
+text.textContent="（comming soon...）"
 }
 
 }
