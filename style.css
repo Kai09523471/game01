@@ -16,20 +16,20 @@ justify-content:center;
 align-items:center;
 }
 
-/* タイトル */
+
 .title{
 font-size:50px;
 margin-bottom:40px;
 letter-spacing:5px;
 }
 
-/* メニュー */
+
 .menu{
 font-size:28px;
 margin:10px;
 }
 
-/* 選択中（点滅） */
+
 .selected{
 animation:blink 1s infinite;
 }
@@ -40,7 +40,7 @@ animation:blink 1s infinite;
 100%{opacity:1;}
 }
 
-/* ロビー背景 */
+
 #lobby{
 position:absolute;
 top:0;
@@ -53,7 +53,7 @@ background-position:center;
 display:none;
 }
 
-/* キャラ */
+
 .character{
 position:absolute;
 bottom:150px;
@@ -65,7 +65,7 @@ font-size:40px;
 #char3{ left:60%; }
 #char4{ left:80%; }
 
-/* セリフボックス */
+
 #dialogBox{
 position:absolute;
 bottom:30px;
