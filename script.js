@@ -12,13 +12,13 @@ const menu = ["ニューゲーム","コンテニュー"]
 let story = []
 let storyIndex = 0
 
-/* 文字表示用 */
+
 let textSpeed = 40
 let currentText = ""
 let textIndex = 0
 let typing = false
 
-/* タイトル画面 */
+
 function drawTitle(){
 
 screen.innerHTML=""
@@ -44,7 +44,7 @@ screen.appendChild(div)
 
 }
 
-/* 名前入力 */
+
 function nameInput(){
 
 screen.innerHTML=""
@@ -68,7 +68,7 @@ input.focus()
 
 }
 
-/* 最初のストーリー */
+
 function startStory(){
 
 state="story"
@@ -88,7 +88,7 @@ showText()
 
 }
 
-/* ロビー */
+
 function startLobby(){
 
 state="lobby"
@@ -107,7 +107,7 @@ showText()
 
 }
 
-/* 文字表示 */
+
 function showText(){
 
 currentText = story[storyIndex]
@@ -134,7 +134,7 @@ typing = false
 
 }
 
-/* キー操作 */
+
 document.addEventListener("keydown",(e)=>{
 
 if(state==="title"){
