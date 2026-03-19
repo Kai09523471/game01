@@ -1,4 +1,4 @@
-```javascript
+
 let state = "title"
 let menuIndex = 0
 let playerName = ""
