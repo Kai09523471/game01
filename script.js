@@ -76,9 +76,8 @@ screen.innerHTML=""
 
 story=[
 "...",
-playerName+"、聞こえますか？",
-"これはあなたへのメッセージです",
-"これから物語が始まります"
+playerName+"町外れにある館",
+"そこには化物がでるという噂があった"
 ]
 
 storyIndex=0
@@ -96,10 +95,10 @@ state="lobby"
 document.getElementById("lobby").style.display="block"
 
 story=[
-"アキ: ここが館のロビーか…",
-"ユキ: すごい豪華…",
-`${playerName}: なんだか不気味だな`,
-"ミナ: 誰かいないのかな"
+"卓志: ここが噂の館か…",
+"美希: 気味が悪いわ",
+"たかし: 帰ろうよ",
+`${playerName}: 化物なんているわけ無いでしょう`
 ]
 
 storyIndex=0
